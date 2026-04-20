@@ -18,13 +18,15 @@ This is a **3-page interactive Power BI Dashboard** built on the IBM HR Analytic
 ## 📸 Dashboard Preview
 
 ### Page 1 — Employee Attrition Overview
-![Page 1](screenshots/page1.png)
+![Page 1](https://raw.githubusercontent.com/yogeshkumar70628/IBM-HR-Analytics-Employee-Attrition-Dashboard/main/Screenshot%202026-04-18%20171613.png)
+
 
 ### Page 2 — Demographic & Income Insights
-![Page 2](screenshots/page2.png)
+![Page 2](https://raw.githubusercontent.com/yogeshkumar70628/IBM-HR-Analytics-Employee-Attrition-Dashboard/main/Screenshot%202026-04-18%20171639.png)
+
 
 ### Page 3 — Employee Detail Table
-![Page 3](screenshots/page3.png)
+![Page 3](https://raw.githubusercontent.com/yogeshkumar70628/IBM-HR-Analytics-Employee-Attrition-Dashboard/main/Screenshot%202026-04-18%20171704.png)
 
 ---
 
