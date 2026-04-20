@@ -20,10 +20,8 @@ This is a **3-page interactive Power BI Dashboard** built on the IBM HR Analytic
 ### Page 1 — Employee Attrition Overview
 ![Page 1](https://raw.githubusercontent.com/yogeshkumar70628/IBM-HR-Analytics-Employee-Attrition-Dashboard/main/Screenshot%202026-04-18%20171613.png)
 
-
 ### Page 2 — Demographic & Income Insights
 ![Page 2](https://raw.githubusercontent.com/yogeshkumar70628/IBM-HR-Analytics-Employee-Attrition-Dashboard/main/Screenshot%202026-04-18%20171639.png)
-
 
 ### Page 3 — Employee Detail Table
 ![Page 3](https://raw.githubusercontent.com/yogeshkumar70628/IBM-HR-Analytics-Employee-Attrition-Dashboard/main/Screenshot%202026-04-18%20171704.png)
@@ -39,7 +37,7 @@ This is a **3-page interactive Power BI Dashboard** built on the IBM HR Analytic
 |---|---|
 | Total Employees | 1,470 |
 | Overall Attrition Rate | 16.12% |
-| Avg Monthly Income | $6.50K |
+| Avg Monthly Income | 6.50K |
 | Overtime Attrition Rate | 30.53% |
 
 **Visuals on this page:**
@@ -63,7 +61,7 @@ This is a **3-page interactive Power BI Dashboard** built on the IBM HR Analytic
 
 **Visuals on this page:**
 - **Attrition Rate % by MaritalStatus** — Single employees have the highest attrition at 26%, followed by Married (12%) and Divorced (10%)
-- **Avg Monthly Income by JobLevel** — Area line chart showing income rises steeply from ₹3K (Level 1) to ₹19K (Level 5)
+- **Avg Monthly Income by JobLevel** — Area line chart showing income rises steeply from 3K (Level 1) to 19K (Level 5)
 - **Sum of YearsAtCompany by MonthlyIncome** — Scatter plot revealing income-tenure relationship patterns
 - **Attrition Rate % by BusinessTravel** — Employees who Travel Frequently have 24.9% attrition vs 8% for Non-Travel
 
@@ -120,12 +118,11 @@ This is a **3-page interactive Power BI Dashboard** built on the IBM HR Analytic
 ## 📁 Project Structure
 
 ```
-📦 HR-Employee-Attrition-Dashboard
- ┣ 📊 HR_Employee_Attributions.pbix     ← Power BI file
- ┣ 📂 screenshots/
- ┃ ┣ 🖼️ page1.png                       ← Executive Overview
- ┃ ┣ 🖼️ page2.png                       ← Demographics & Income
- ┃ ┗ 🖼️ page3.png                       ← Detail Table
+📦 IBM-HR-Analytics-Employee-Attrition-Dashboard
+ ┣ 📊 HR_Employee_Attributions.pbix        ← Power BI file
+ ┣ 🖼️ Screenshot 2026-04-18 171613.png     ← Page 1 Preview
+ ┣ 🖼️ Screenshot 2026-04-18 171639.png     ← Page 2 Preview
+ ┣ 🖼️ Screenshot 2026-04-18 171704.png     ← Page 3 Preview
  ┗ 📄 README.md
 ```
 
@@ -143,7 +140,7 @@ This is a **3-page interactive Power BI Dashboard** built on the IBM HR Analytic
 
 1. **Clone this repository**
    ```bash
-   git clone https://github.com/yourusername/HR-Employee-Attrition-Dashboard.git
+   git clone https://github.com/yogeshkumar70628/IBM-HR-Analytics-Employee-Attrition-Dashboard.git
    ```
 
 2. **Open the `.pbix` file** in Power BI Desktop (free download from Microsoft)
@@ -156,21 +153,78 @@ This is a **3-page interactive Power BI Dashboard** built on the IBM HR Analytic
 
 ## 💡 DAX Measures Used
 
+> All measures are built on the table `WA_Fn-UseC_-HR-Employee-Attrition`
+
 ```dax
--- Attrition Rate %
-Attrition Rate % = 
+-- 1. Total Employees
+Total Employees =
+COUNTROWS('WA_Fn-UseC_-HR-Employee-Attrition')
+
+-- 2. Total Attrition
+Total Attrition =
+SUM('WA_Fn-UseC_-HR-Employee-Attrition'[AttritionFlag])
+
+-- 3. Attrition Rate %
+Attrition Rate % =
+DIVIDE([Total Attrition], [Total Employees], 0) * 100
+
+-- 4. Retention Rate %
+Retention Rate % =
+100 - [Attrition Rate %]
+
+-- 5. Avg Age
+Avg Age =
+AVERAGE('WA_Fn-UseC_-HR-Employee-Attrition'[Age])
+
+-- 6. Avg Monthly Income
+Avg Monthly Income =
+AVERAGE('WA_Fn-UseC_-HR-Employee-Attrition'[MonthlyIncome])
+
+-- 7. Avg Years At Company
+Avg Years At Company =
+AVERAGE('WA_Fn-UseC_-HR-Employee-Attrition'[YearsAtCompany])
+
+-- 8. Overtime Attrition Rate
+Overtime Attrition Rate =
 DIVIDE(
-    CALCULATE(COUNT(HR_Data[Attrition]), HR_Data[Attrition] = "Yes"),
-    COUNT(HR_Data[Attrition]),
+    CALCULATE(
+        COUNTROWS('WA_Fn-UseC_-HR-Employee-Attrition'),
+        'WA_Fn-UseC_-HR-Employee-Attrition'[Attrition] = "Yes",
+        'WA_Fn-UseC_-HR-Employee-Attrition'[OverTime] = "Yes"
+    ),
+    CALCULATE(
+        COUNTROWS('WA_Fn-UseC_-HR-Employee-Attrition'),
+        'WA_Fn-UseC_-HR-Employee-Attrition'[OverTime] = "Yes"
+    ),
     0
 ) * 100
 
--- Avg Monthly Income
-Avg Monthly Income = AVERAGE(HR_Data[MonthlyIncome])
+-- 9. Dept Attrition vs Avg
+Dept Attrition vs Avg =
+[Attrition Rate %] - CALCULATE(
+    [Attrition Rate %],
+    ALL('WA_Fn-UseC_-HR-Employee-Attrition'[Department])
+)
 
--- Overtime Attrition Rate
-Overtime Attrition Rate = 
-CALCULATE([Attrition Rate %], HR_Data[OverTime] = "Yes")
+-- 10. High Risk Employees
+High Risk Employees =
+CALCULATE(
+    [Total Employees],
+    'WA_Fn-UseC_-HR-Employee-Attrition'[OverTime] = "Yes",
+    'WA_Fn-UseC_-HR-Employee-Attrition'[JobSatisfaction] <= 2,
+    'WA_Fn-UseC_-HR-Employee-Attrition'[WorkLifeBalance] <= 2
+)
+
+-- 11. Income Gap Male vs Female
+Income Gap Male vs Female =
+CALCULATE(
+    [Avg Monthly Income],
+    'WA_Fn-UseC_-HR-Employee-Attrition'[Gender] = "Male"
+)
+- CALCULATE(
+    [Avg Monthly Income],
+    'WA_Fn-UseC_-HR-Employee-Attrition'[Gender] = "Female"
+)
 ```
 
 ---
