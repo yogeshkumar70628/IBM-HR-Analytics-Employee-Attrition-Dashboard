@@ -187,7 +187,7 @@ CALCULATE([Attrition Rate %], HR_Data[OverTime] = "Yes")
 
 **YogeshKumar**
 - 🔗 LinkedIn: https://www.linkedin.com/in/yogeshkumar-data-analyst/
-- 💼 GitHub: [github.com/yourusername](https://github.com/yourusername)
+- 💼 GitHub: https://github.com/yogeshkumar70628
 - 📧 Email: yugalarya70628@gmail.com
 
 ---
